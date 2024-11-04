@@ -23,8 +23,8 @@ public class CSC133Driver {
         final int FRAME_DELAY = 200;
         // should take the arguments for boardsize that given to pingpong manager
         // for now just set up calculations for fully fitting the desired col and rows of squares
-        int ROWS = 6;
-        int COLS = 6;
+        int ROWS = 12;
+        int COLS = 12;
         my_re.render(FRAME_DELAY,ROWS,COLS);
 
     }
