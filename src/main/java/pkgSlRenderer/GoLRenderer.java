@@ -7,8 +7,20 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class GoLRenderer {
 
-    public void render(int FRAME_DELAY) {
+    public void render(int FRAME_DELAY, int ROWS, int COLS) {
         long windowHandle = SlWindowManager.get().getWindowHandle();
+
+        // define how much screen space to give for squares
+        // try a small value -> magic number | change to defined var later
+        float maxHorizontalSpace = 0.2f * (ROWS - 1);
+        float maxVerticalSpace = 0.2f * (COLS - 1);
+
+        // define the max width of the squares
+        // total NDC space is 2 from edge to edge
+        // 0.01-0.03 best for testing in NDC
+        float squareWidth = (2 - maxHorizontalSpace -2 * 0.01f) / COLS;
+        float squareHeight = (2 - maxVerticalSpace -2 * 0.01f) / ROWS;
+
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -20,9 +32,18 @@ public class GoLRenderer {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
-            //test square
-            glColor3f(1,0,0);
-            drawSquare(0.5f,-0.5f,0.05f,0.05f);
+            for (int i = 0; i < ROWS; i++){
+                for (int j = 0; j < COLS; j++) {
+                    // define where to place squares
+                    // NCC -> -1 left/down | 1 up/right |
+                    // 0.01-0.03 best for testing in NDC
+                    float xAxi = -1 + 0.01f +  j * (squareWidth + 0.02f);
+                    float yAxi = 1 - 0.01f - (i + 1) * (squareHeight + 0.02f);
+                    //test square
+                    glColor3f(1,0,0);
+                    drawSquare(xAxi,yAxi,squareWidth,squareHeight);
+                }
+            }
 
             glfwSwapBuffers(windowHandle);
             frameDelay(FRAME_DELAY);

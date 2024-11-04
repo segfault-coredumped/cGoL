@@ -21,7 +21,11 @@ public class CSC133Driver {
         my_re.initOpenGL(SlWindowManager.get());
 
         final int FRAME_DELAY = 200;
-        my_re.render(FRAME_DELAY);
+        // should take the arguments for boardsize that given to pingpong manager
+        // for now just set up calculations for fully fitting the desired col and rows of squares
+        int ROWS = 6;
+        int COLS = 6;
+        my_re.render(FRAME_DELAY,ROWS,COLS);
 
     }
 }
