@@ -20,6 +20,10 @@ public class GoLRenderer {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
+            //test square
+            glColor3f(1,0,0);
+            drawSquare(0.5f,-0.5f,0.05f,0.05f);
+
             glfwSwapBuffers(windowHandle);
             frameDelay(FRAME_DELAY);
         }
