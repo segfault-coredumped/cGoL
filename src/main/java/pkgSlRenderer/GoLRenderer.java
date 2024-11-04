@@ -25,6 +25,15 @@ public class GoLRenderer {
         }
     }
 
+    private void drawSquare(float xAxi, float yAxi, float squareWidth, float squareHeight) {
+        glBegin(GL_QUADS);
+        glVertex2f(xAxi, yAxi);
+        glVertex2f(xAxi + squareWidth, yAxi);
+        glVertex2f(xAxi + squareWidth, yAxi + squareHeight);
+        glVertex2f(xAxi, yAxi + squareHeight);
+        glEnd();
+    }
+
 
     private void frameDelay(int FRAME_DELAY) {
         if (FRAME_DELAY > 0) {
