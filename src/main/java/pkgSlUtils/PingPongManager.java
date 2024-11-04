@@ -97,8 +97,6 @@ public class PingPongManager {
             }
         }
     }
-
-    // G
     // count next nearest of a specific cell
     // 8 NNN so we need left right up down and up/left up/right down/left down/right
     // since NN covers the first 4 we can just call that in the method
@@ -132,7 +130,7 @@ public class PingPongManager {
         }
     }
 
-    // H
+    // might need this for keystroke implimentations
     // reset board to random number between 2 integer values
     public void resetBoard(int lowerBound, int upperBound) {
         for (int i = 0; i < rows; i++) {
@@ -142,19 +140,8 @@ public class PingPongManager {
         }
     }
 
-    // I
-    // No argument board reset | resets to default 0 or 1
-    public void defaultReset() {
-        int lowerBound = 0;
-        int upperBound = 1;
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                setLiveArr(i, j, random.nextInt(upperBound - lowerBound + 1) + lowerBound);
-            }
-        }
-    }
 
-    // J
+    // keep for debugging
     public void showLiveArr() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
