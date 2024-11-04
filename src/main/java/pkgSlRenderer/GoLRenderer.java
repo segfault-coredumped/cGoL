@@ -10,6 +10,8 @@ public class GoLRenderer {
     private static final float SPACE_BETWEEN_SQUARES = 0.01f;
     private static final float WIN_MARGIN = 0.02f;
 
+    private static final float ADJUST_MARGIN_Y = 0.01f;
+
     public static final float NDC_WIDTH = 2.0f;
     public static final float NDC_HEIGHT = 2.0f;
 
@@ -54,7 +56,7 @@ public class GoLRenderer {
                 // define where to place squares
                 // NCC -> -1 left/down | 1 up/right |
                 float xAxi = NDC_LEFT_DOWN + WIN_MARGIN +  j * (squareWidth + SPACE_BETWEEN_SQUARES);
-                float yAxi = NDC_RIGHT_UP - WIN_MARGIN - (i + 1) * (squareHeight + SPACE_BETWEEN_SQUARES);
+                float yAxi = NDC_RIGHT_UP - ADJUST_MARGIN_Y - (i + 1) * (squareHeight + SPACE_BETWEEN_SQUARES);
                 //test square
                 glColor3f(1,0,0);
                 drawSquare(xAxi,yAxi,squareWidth,squareHeight);
