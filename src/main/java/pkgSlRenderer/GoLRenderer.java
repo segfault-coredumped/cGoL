@@ -40,20 +40,26 @@ public class GoLRenderer {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
-            for (int i = 0; i < ROWS; i++){
-                for (int j = 0; j < COLS; j++) {
-                    // define where to place squares
-                    // NCC -> -1 left/down | 1 up/right |
-                    float xAxi = NDC_LEFT_DOWN + WIN_MARGIN +  j * (squareWidth + SPACE_BETWEEN_SQUARES);
-                    float yAxi = NDC_RIGHT_UP - WIN_MARGIN - (i + 1) * (squareHeight + SPACE_BETWEEN_SQUARES);
-                    //test square
-                    glColor3f(1,0,0);
-                    drawSquare(xAxi,yAxi,squareWidth,squareHeight);
-                }
-            }
+            // put array on screen
+            arrangeSquares(ROWS, COLS,squareWidth,squareHeight);
 
             glfwSwapBuffers(windowHandle);
             frameDelay(FRAME_DELAY);
+        }
+    }
+
+    private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight) {
+        for (int i = 0; i < rows ; i++) {
+            for (int j = 0; j < cols; j++) {
+                // define where to place squares
+                // NCC -> -1 left/down | 1 up/right |
+                float xAxi = NDC_LEFT_DOWN + WIN_MARGIN +  j * (squareWidth + SPACE_BETWEEN_SQUARES);
+                float yAxi = NDC_RIGHT_UP - WIN_MARGIN - (i + 1) * (squareHeight + SPACE_BETWEEN_SQUARES);
+                //test square
+                glColor3f(1,0,0);
+                drawSquare(xAxi,yAxi,squareWidth,squareHeight);
+
+            }
         }
     }
 
