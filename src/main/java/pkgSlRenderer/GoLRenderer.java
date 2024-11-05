@@ -43,36 +43,48 @@ public class GoLRenderer {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+        // check output to match with what is rendered on the window
+        pp.showLiveArr();
+
 
         while (!glfwWindowShouldClose(windowHandle)) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
             // put array on screen
-            arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight);
+            arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight,pp);
+
 
             glfwSwapBuffers(windowHandle);
             frameDelay(FRAME_DELAY);
         }
     }
 
-    private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight) {
+    // method needs to be passed the instance of pp so we can
+    // edit the colors of the squares before the call to render them
+    private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight, PingPongManager pp) {
         for (int i = 0; i < rows ; i++) {
             for (int j = 0; j < cols; j++) {
                 // define where to place squares
                 // NCC -> -1 left/down | 1 up/right |
                 float xAxi = NDC_LEFT_DOWN + WIN_MARGIN +  j * (squareWidth + SPACE_BETWEEN_SQUARES);
                 float yAxi = NDC_RIGHT_UP - ADJUST_MARGIN_Y - (i + 1) * (squareHeight + SPACE_BETWEEN_SQUARES);
+
+                // set color for alive or dead squares
+                if (pp.get(i,j) == 1) {
+                    // alive color
+                    glColor3f(0,1,0);
+                }
+                else {
+                    // dead color ( change to match screen background )
+                    glColor3f(1,0,0);
+                }
                 //test square
-                glColor3f(1,0,0);
                 drawSquare(xAxi,yAxi,squareWidth,squareHeight);
-
-
-
             }
         }
     }
-
+    // best to leave this to only control creating a square
     private void drawSquare(float xAxi, float yAxi, float squareWidth, float squareHeight) {
         glBegin(GL_QUADS);
         glVertex2f(xAxi, yAxi);
