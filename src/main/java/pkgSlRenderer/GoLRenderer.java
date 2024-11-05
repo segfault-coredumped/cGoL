@@ -44,13 +44,13 @@ public class GoLRenderer {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
         // check output to match with what is rendered on the window
-        pp.showLiveArr();
-
+        //pp.showLiveArr();
 
         while (!glfwWindowShouldClose(windowHandle)) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
+            pp.liveOrDie();
             // put array on screen
             arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight,pp);
 
@@ -77,7 +77,7 @@ public class GoLRenderer {
                 }
                 else {
                     // dead color ( change to match screen background )
-                    glColor3f(1,0,0);
+                    glColor4f(1,0,0,1);
                 }
                 //test square
                 drawSquare(xAxi,yAxi,squareWidth,squareHeight);
