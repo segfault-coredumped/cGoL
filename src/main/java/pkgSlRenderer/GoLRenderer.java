@@ -49,7 +49,6 @@ public class GoLRenderer {
         while (!glfwWindowShouldClose(windowHandle)) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
-
             pp.liveOrDie();
             // put array on screen
             arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight,pp);
@@ -106,6 +105,5 @@ public class GoLRenderer {
     }
 
     public void initOpenGL(SlWindowManager slWindowManager) {
-        // Initialize OpenGL settings if necessary
     }
 }
