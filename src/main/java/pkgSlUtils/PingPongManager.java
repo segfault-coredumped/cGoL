@@ -12,8 +12,40 @@ public class PingPongManager {
 
     private final Random random;
 
-    // constructors
+    // goal
+    // we need to hook up the pingpong arrays with the square renderer
+    public void liveOrDie() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                // for each value in PP get the NNN count
+                int nnnValue = countNNN(i,j);
+                // rules for alive squares
+                if(liveArr[i][j] == 1) {
+                    if(nnnValue < 2 || nnnValue > 3) {
+                        // dies
+                        nextArr[i][j] = 0;
+                    }
+                    else {
+                        // continues to live...
+                        nextArr[i][j] = 1;
+                    }
+                }
+                // rules for dead squares
+                else {
+                    if (nnnValue == 3) {
+                        // resurrect
+                        nextArr[i][j] = 1;
+                    }
+                    else {
+                        // stay dead
+                        nextArr[i][j] = 0;
+                    }
+                }
+            }
+        }
+    }
 
+    // constructors
     // A
     // A constructor that takes two integer arguments: for the number of rows
     // and number of columns. This should initialize the cells with a random

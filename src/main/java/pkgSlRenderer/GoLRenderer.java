@@ -4,6 +4,7 @@ import pkgSlUtils.PingPongManager;
 import pkgSlUtils.SlWindowManager;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static pkgCSC133Driver.SlSpot.BOARDSIZE;
 
 public class GoLRenderer {
 
@@ -19,17 +20,22 @@ public class GoLRenderer {
 
     public static final float NDC_LEFT_DOWN = -1.0f;
 
-    public void render(int FRAME_DELAY, int ROWS, int COLS) {
+    public void render(int FRAME_DELAY) {
         long windowHandle = SlWindowManager.get().getWindowHandle();
 
+        // goal
+        // we need to hook up the pingpong arrays with the square renderer according to predefined rules
+        // pp should be instantiated  somewhere inside render class
+        PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
+
         // define how much screen space to give for squares
-        float maxHorizontalSpace = SPACE_BETWEEN_SQUARES * (ROWS - 1);
-        float maxVerticalSpace = SPACE_BETWEEN_SQUARES * (COLS - 1);
+        float maxHorizontalSpace = SPACE_BETWEEN_SQUARES * (pp.getRows() - 1);
+        float maxVerticalSpace = SPACE_BETWEEN_SQUARES * (pp.getCols() - 1);
 
         // define the max width of the squares
         // total NDC space is 2 from edge to edge
-        float squareWidth = (NDC_WIDTH - maxHorizontalSpace - NDC_WIDTH * WIN_MARGIN) / COLS;
-        float squareHeight = (NDC_HEIGHT - maxVerticalSpace - NDC_HEIGHT * WIN_MARGIN) / ROWS;
+        float squareWidth = (NDC_WIDTH - maxHorizontalSpace - NDC_WIDTH * WIN_MARGIN) / pp.getRows();
+        float squareHeight = (NDC_HEIGHT - maxVerticalSpace - NDC_HEIGHT * WIN_MARGIN) / pp.getCols();
 
 
         glEnable(GL_BLEND);
@@ -43,7 +49,7 @@ public class GoLRenderer {
             glClear(GL_COLOR_BUFFER_BIT);
 
             // put array on screen
-            arrangeSquares(ROWS, COLS,squareWidth,squareHeight);
+            arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight);
 
             glfwSwapBuffers(windowHandle);
             frameDelay(FRAME_DELAY);
@@ -60,6 +66,8 @@ public class GoLRenderer {
                 //test square
                 glColor3f(1,0,0);
                 drawSquare(xAxi,yAxi,squareWidth,squareHeight);
+
+
 
             }
         }
