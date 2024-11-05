@@ -9,7 +9,7 @@ import static pkgCSC133Driver.SlSpot.*;
 public class CSC133Driver {
     public static void main(String[] my_args) {
         // instance of pingpong manager
-        PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
+        //PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
         //pp.showLiveArr();
         //pp.fillNNNNextArr();
         //pp.swapArr();
@@ -20,9 +20,9 @@ public class CSC133Driver {
         SlWindowManager.get().initGLFWWindow(WIN_WIDTH, WIN_HEIGHT, "CSUS CSC133");
         my_re.initOpenGL(SlWindowManager.get());
 
-        final int FRAME_DELAY = 200;
+        final int FRAME_DELAY = 20;
         // should take the arguments for boardsize that given to pingpong manager
-        my_re.render(FRAME_DELAY,pp.getRows(),pp.getCols());
+        my_re.render(FRAME_DELAY);
 
     }
 }
