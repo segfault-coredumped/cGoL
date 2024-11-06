@@ -13,6 +13,7 @@ public class CSC133Driver {
         //                d to decrease frame delay by 500
         //                p to pause / p to unpause
         //                q to quit
+
         GoLRenderer my_re = new GoLRenderer();
         SlWindowManager.get().initGLFWWindow(WIN_WIDTH, WIN_HEIGHT, "CSUS CSC133");
         my_re.initOpenGL(SlWindowManager.get());
