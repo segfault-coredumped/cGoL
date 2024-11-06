@@ -82,6 +82,7 @@ public class GoLRenderer {
         boolean dPressed = false;
         boolean rPressed = false;
         boolean pPressed = false;
+        boolean qPressed = false;
 
         while(KeepRunning) {
             // poll events needed here
@@ -93,7 +94,7 @@ public class GoLRenderer {
                 FRAME_DELAY += 500;
                 System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
                 KeepRunning = true;
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
             else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_I)) {
@@ -113,7 +114,7 @@ public class GoLRenderer {
                 }
                 KeepRunning = true;
                 System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
             else if(!SlKeyStrokes.isKeyPressed(GLFW_KEY_D)) {
@@ -127,15 +128,15 @@ public class GoLRenderer {
                 System.out.println("+++ Reset Board");
                 pp.resetBoard(0,1);
                 KeepRunning = true;
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
             else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_R)) {
                 rPressed = false;
             }
 
-            // pause for debugging
+            // for p | pause for debugging
             if (SlKeyStrokes.isKeyPressed(GLFW_KEY_P) && !pPressed) {
                 pPressed = true;
                 pauseScreen = !pauseScreen;
@@ -147,13 +148,28 @@ public class GoLRenderer {
                 else {
                     System.out.println("+++ Unpause Screen");
                 }
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
-                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_P);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
             else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_P)) {
                 pPressed = false;
+            }
+
+            // for q | quit
+            if (SlKeyStrokes.isKeyPressed(GLFW_KEY_Q) && !qPressed) {
+                qPressed = true;
+                System.out.println("+++ GoodBye!");
+                KeepRunning = false;
+
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
+                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_P);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_Q);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
         }
     }
