@@ -12,8 +12,6 @@ public class PingPongManager {
 
     private final Random random;
 
-    // goal
-    // we need to hook up the pingpong arrays with the square renderer
     public void liveOrDie() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -46,11 +44,13 @@ public class PingPongManager {
                 }
             }
         }
-        System.out.println("Live ARRAY");
-        showLiveArr();
+        // uncomment for debugging with pause
+        //System.out.println("Live ARRAY");
+        //showLiveArr();
         swapArr();
-        System.out.println("NNN-Of-Live ARRAY");
-        showLiveArr();
+        // uncomment for debugging with pause
+        //System.out.println("NNN-Of-Live ARRAY");
+        //showLiveArr();
     }
 
     // constructors
@@ -131,9 +131,8 @@ public class PingPongManager {
         return count;
     }
 
-    // liveOrDie decides how to fill next array
-    // redundant for this assignment delete when needed
 
+    // redundant for this assignment delete when needed
     public void fillNNNextArr() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -166,6 +165,9 @@ public class PingPongManager {
         }
         return count;
     }
+
+    // liveOrDie decides how to fill next array
+    // redundant for this assignment delete when needed
     public void fillNNNNextArr() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
