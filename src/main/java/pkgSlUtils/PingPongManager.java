@@ -131,9 +131,8 @@ public class PingPongManager {
         return count;
     }
 
-    // liveOrDie decides how to fill next array
-    // redundant for this assignment delete when needed
 
+    // redundant for this assignment delete when needed
     public void fillNNNextArr() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -166,6 +165,9 @@ public class PingPongManager {
         }
         return count;
     }
+
+    // liveOrDie decides how to fill next array
+    // redundant for this assignment delete when needed
     public void fillNNNNextArr() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {

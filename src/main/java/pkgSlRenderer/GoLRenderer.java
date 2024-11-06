@@ -5,7 +5,8 @@ import pkgSlUtils.SlKeyStrokes;
 import pkgSlUtils.SlWindowManager;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static pkgCSC133Driver.SlSpot.BOARDSIZE;
+import static pkgCSC133Driver.SlSpot.*;
+
 
 public class GoLRenderer {
 
@@ -21,16 +22,18 @@ public class GoLRenderer {
 
     public static final float NDC_LEFT_DOWN = -1.0f;
 
-    public void render(int FRAME_DELAY) {
+    // volatile to denote value being used by different threads
+    private volatile boolean KeepRunning = true;
+
+    // keep spot file as the control for frame delay
+    // changes to this are not atomic but since only one thread is making changes to another there should be no race conditions
+    private volatile int FRAME_DELAY = spot_frame_delay;
+
+    // pp should be instantiated  somewhere class
+    PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
+
+    public void render() {
         long windowHandle = SlWindowManager.get().getWindowHandle();
-
-        // goal
-        // we need to hook up the pingpong arrays with the square renderer according to predefined rules
-        // pp should be instantiated  somewhere inside render class
-        PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
-
-        // we need an instance of key strokes
-        //SlKeyStrokes ks = new SlKeyStrokes();
 
         // define how much screen space to give for squares
         float maxHorizontalSpace = SPACE_BETWEEN_SQUARES * (pp.getRows() - 1);
@@ -41,22 +44,43 @@ public class GoLRenderer {
         float squareWidth = (NDC_WIDTH - maxHorizontalSpace - NDC_WIDTH * WIN_MARGIN) / pp.getRows();
         float squareHeight = (NDC_HEIGHT - maxVerticalSpace - NDC_HEIGHT * WIN_MARGIN) / pp.getCols();
 
-
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-        // check output to match with what is rendered on the window
-        //pp.showLiveArr();
 
-        boolean KeepRunning = true;
-
-        while (!glfwWindowShouldClose(windowHandle)) {
+        while (!glfwWindowShouldClose(windowHandle) && KeepRunning) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
-            if (SlKeyStrokes.isKeyPressed(GLFW_KEY_I) ) {
+            pp.liveOrDie();
+            // put array on screen
+            arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight);
+
+            glfwSwapBuffers(windowHandle);
+            frameDelay(FRAME_DELAY);
+
+            if (glfwWindowShouldClose(windowHandle)) {
+                // stop second thread on window close
+                KeepRunning = false;
+            }
+        }
+    }
+
+    // method to handle registration of keys and their effects on the main thread
+    private void registerKeyStrokes() {
+
+        // control keyPress registration
+        boolean iPressed = false;
+        boolean dPressed = false;
+        boolean rPressed = false;
+
+        while(KeepRunning) {
+            // poll events needed here
+            glfwPollEvents();
+            // for I
+            if (SlKeyStrokes.isKeyPressed(GLFW_KEY_I) && !iPressed) {
+                iPressed = true;
                 KeepRunning = false;
                 FRAME_DELAY += 500;
                 System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
@@ -64,33 +88,49 @@ public class GoLRenderer {
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
-            if(SlKeyStrokes.isKeyPressed(GLFW_KEY_D)) {
+            else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_I)) {
+                iPressed = false;
+            }
+
+            // for D
+            if(SlKeyStrokes.isKeyPressed(GLFW_KEY_D) && !dPressed) {
+                dPressed = true;
                 KeepRunning = false;
                 // only reduce if frame delay is larger than 500
-                if (FRAME_DELAY >= 500) {
+                if(FRAME_DELAY > 0) {
                     FRAME_DELAY -= 500;
+                    if(FRAME_DELAY < 0) {
+                        FRAME_DELAY = 0;
+                    }
                 }
-                else {
-                    FRAME_DELAY = 0;
-                }
+                KeepRunning = true;
                 System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
+            else if(!SlKeyStrokes.isKeyPressed(GLFW_KEY_D)) {
+                dPressed = false;
+            }
 
-            pp.liveOrDie();
-            // put array on screen
-            arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight,pp);
-
-
-            glfwSwapBuffers(windowHandle);
-            frameDelay(Math.max(FRAME_DELAY,10));
+            // for r
+            if(SlKeyStrokes.isKeyPressed(GLFW_KEY_R) && !rPressed) {
+                rPressed = true;
+                KeepRunning = false;
+                System.out.println("+++ Reset Board");
+                pp.resetBoard(0,1);
+                KeepRunning = true;
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
+            }
+            else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_R)) {
+                rPressed = false;
+            }
         }
     }
 
-    // method needs to be passed the instance of pp so we can
     // edit the colors of the squares before the call to render them
-    private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight, PingPongManager pp) {
+    private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight) {
         for (int i = 0; i < rows ; i++) {
             for (int j = 0; j < cols; j++) {
                 // define where to place squares
@@ -134,5 +174,7 @@ public class GoLRenderer {
     }
 
     public void initOpenGL(SlWindowManager slWindowManager) {
+        // new thread to handle keystrokes
+        new Thread(this::registerKeyStrokes).start();
     }
 }
