@@ -25,6 +25,8 @@ public class GoLRenderer {
     // volatile to denote value being used by different threads
     private volatile boolean KeepRunning = true;
 
+    private volatile boolean pauseScreen = false;
+
     // keep spot file as the control for frame delay
     // changes to this are not atomic but since only one thread is making changes to another there should be no race conditions
     private volatile int FRAME_DELAY = spot_frame_delay;
@@ -53,7 +55,12 @@ public class GoLRenderer {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
-            pp.liveOrDie();
+            // wrapper to pause rendering
+            if (!pauseScreen) {
+                pp.liveOrDie();
+
+            }
+            //pp.liveOrDie();
             // put array on screen
             arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight);
 
@@ -74,6 +81,7 @@ public class GoLRenderer {
         boolean iPressed = false;
         boolean dPressed = false;
         boolean rPressed = false;
+        boolean pPressed = false;
 
         while(KeepRunning) {
             // poll events needed here
@@ -126,6 +134,27 @@ public class GoLRenderer {
             else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_R)) {
                 rPressed = false;
             }
+
+            // pause for debugging
+            if (SlKeyStrokes.isKeyPressed(GLFW_KEY_P) && !pPressed) {
+                pPressed = true;
+                pauseScreen = !pauseScreen;
+                if(pauseScreen) {
+                    System.out.println("+++ Pause Screen");
+                    // uncomment to show NNNArray
+                    //pp.showLiveArr();
+                }
+                else {
+                    System.out.println("+++ Unpause Screen");
+                }
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
+            }
+            else if (!SlKeyStrokes.isKeyPressed(GLFW_KEY_P)) {
+                pPressed = false;
+            }
         }
     }
 
@@ -145,7 +174,7 @@ public class GoLRenderer {
                 }
                 else {
                     // dead color ( change to match screen background )
-                    glColor4f(1,0,0,1);
+                    glColor4f(0,0,0,1);
                 }
                 //test square
                 drawSquare(xAxi,yAxi,squareWidth,squareHeight);
