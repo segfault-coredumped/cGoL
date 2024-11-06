@@ -113,7 +113,7 @@ public class GoLRenderer {
                     }
                 }
                 KeepRunning = true;
-                System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
+                System.out.println("--- Frame delay is now: " + FRAME_DELAY + " ms!");
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
@@ -128,7 +128,7 @@ public class GoLRenderer {
                 System.out.println("+++ Reset Board");
                 pp.resetBoard(0,1);
                 KeepRunning = true;
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
@@ -148,9 +148,7 @@ public class GoLRenderer {
                 else {
                     System.out.println("+++ Unpause Screen");
                 }
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
+
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_P);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
@@ -164,10 +162,6 @@ public class GoLRenderer {
                 System.out.println("+++ GoodBye!");
                 KeepRunning = false;
 
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
-                //SlKeyStrokes.resetKeypressEvent(GLFW_KEY_P);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_Q);
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
             }
