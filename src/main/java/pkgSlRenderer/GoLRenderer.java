@@ -1,6 +1,7 @@
 package pkgSlRenderer;
 
 import pkgSlUtils.PingPongManager;
+import pkgSlUtils.SlKeyStrokes;
 import pkgSlUtils.SlWindowManager;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -28,6 +29,9 @@ public class GoLRenderer {
         // pp should be instantiated  somewhere inside render class
         PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
 
+        // we need an instance of key strokes
+        //SlKeyStrokes ks = new SlKeyStrokes();
+
         // define how much screen space to give for squares
         float maxHorizontalSpace = SPACE_BETWEEN_SQUARES * (pp.getRows() - 1);
         float maxVerticalSpace = SPACE_BETWEEN_SQUARES * (pp.getCols() - 1);
@@ -46,16 +50,41 @@ public class GoLRenderer {
         // check output to match with what is rendered on the window
         //pp.showLiveArr();
 
+        boolean KeepRunning = true;
+
         while (!glfwWindowShouldClose(windowHandle)) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
+
+            if (SlKeyStrokes.isKeyPressed(GLFW_KEY_I) ) {
+                KeepRunning = false;
+                FRAME_DELAY += 500;
+                System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
+                KeepRunning = true;
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_D);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
+            }
+            if(SlKeyStrokes.isKeyPressed(GLFW_KEY_D)) {
+                KeepRunning = false;
+                // only reduce if frame delay is larger than 500
+                if (FRAME_DELAY >= 500) {
+                    FRAME_DELAY -= 500;
+                }
+                else {
+                    FRAME_DELAY = 0;
+                }
+                System.out.println("+++ Frame delay is now: " + FRAME_DELAY + " ms!");
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_I);
+                SlKeyStrokes.resetKeypressEvent(GLFW_KEY_LEFT_SHIFT);
+            }
+
             pp.liveOrDie();
             // put array on screen
             arrangeSquares(pp.getRows(), pp.getCols(),squareWidth,squareHeight,pp);
 
 
             glfwSwapBuffers(windowHandle);
-            frameDelay(FRAME_DELAY);
+            frameDelay(Math.max(FRAME_DELAY,10));
         }
     }
 

@@ -20,7 +20,7 @@ public class CSC133Driver {
         SlWindowManager.get().initGLFWWindow(WIN_WIDTH, WIN_HEIGHT, "CSUS CSC133");
         my_re.initOpenGL(SlWindowManager.get());
 
-        final int FRAME_DELAY = 20;
+        final int FRAME_DELAY = 550;
         // should take the arguments for boardsize that given to pingpong manager
         my_re.render(FRAME_DELAY);
 

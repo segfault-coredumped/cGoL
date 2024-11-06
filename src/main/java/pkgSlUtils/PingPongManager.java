@@ -46,11 +46,11 @@ public class PingPongManager {
                 }
             }
         }
-        System.out.println("Live ARRAY");
-        showLiveArr();
+        //System.out.println("Live ARRAY");
+        //showLiveArr();
         swapArr();
-        System.out.println("NNN-Of-Live ARRAY");
-        showLiveArr();
+        //System.out.println("NNN-Of-Live ARRAY");
+        //showLiveArr();
     }
 
     // constructors

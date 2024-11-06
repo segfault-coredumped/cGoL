@@ -29,6 +29,9 @@ public class SlWindowManager {
     // encapsulating window creation
     public void initGLFWWindow(int width, int height, String title) {
         makeWindow(width, height, title);
+        glfwSetKeyCallback(windowHandle, (windowHandle, key, scancode, action, mods) -> {
+            SlKeyStrokes.keyCallback(windowHandle, key, scancode, action, mods);
+        });
     }
 
     // build the window instance
