@@ -2,7 +2,7 @@ package pkgSlUtils;
 
 import java.util.Random;
 
-public class PingPongManager {
+public class SlPingPongManager {
     // 2 arrays for live and next
     private int[][] liveArr;
     private int[][] nextArr;
@@ -58,7 +58,7 @@ public class PingPongManager {
     // A constructor that takes two integer arguments: for the number of rows
     // and number of columns. This should initialize the cells with a random
     // integer between {0, 1}.
-    public PingPongManager(int rows, int cols) {
+    public SlPingPongManager(int rows, int cols) {
         this.rows = rows;
         this.cols = cols;
         this.liveArr = new int[rows][cols];

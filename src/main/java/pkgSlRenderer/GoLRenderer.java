@@ -1,6 +1,6 @@
 package pkgSlRenderer;
 
-import pkgSlUtils.PingPongManager;
+import pkgSlUtils.SlPingPongManager;
 import pkgSlUtils.SlKeyStrokes;
 import pkgSlUtils.SlWindowManager;
 import static org.lwjgl.glfw.GLFW.*;
@@ -32,7 +32,35 @@ public class GoLRenderer {
     private volatile int FRAME_DELAY = spot_frame_delay;
 
     // pp should be instantiated  somewhere class
-    PingPongManager pp = new PingPongManager(BOARDSIZE,BOARDSIZE);
+    SlPingPongManager pp = new SlPingPongManager(BOARDSIZE,BOARDSIZE);
+
+    // store part of color wheel in array, so we can easily cycle
+    private final float[][] colors = {
+            // oscillate through wheel color from orange-ish -> green -> orange-ish and repeat
+            // cycle up wheel
+            {1.0f, 0.8f, 0.0f},
+            {1.0f, 1.0f, 0.0f},
+            {0.75f, 1.0f, 0.0f},
+            {0.5f, 1.0f, 0.0f},
+            {0.0f, 1.0f, 0.0f},
+            // cycle back down
+            {0.0f, 1.0f, 0.5f},
+            {0.0f, 1.0f, 0.0f},
+            {0.5f, 1.0f, 0.0f},
+            {0.75f, 1.0f, 0.0f},
+            {1.0f, 1.0f, 0.0f},
+            {1.0f, 0.8f, 0.0f},
+    };
+
+    // track which color we are on
+    private int currColor = 0;
+
+    // changing colors every 5 frames seems fine for high frame delays
+    // need conditions for smooth transitions for low frame delays
+    private static int frameCountForColorChange = 5;
+
+    // track how many frames
+    private int countFrames = 0;
 
     public void render() {
         long windowHandle = SlWindowManager.get().getWindowHandle();
@@ -50,10 +78,42 @@ public class GoLRenderer {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
+        // show controls to user once
+        System.out.println("""
+                +----------------------------------------------------+
+                |   User Controls                                    |
+                |   When running : r to reset                        |
+                |                  i to increase frame delay by 500  |
+                |                  d to decrease frame delay by 500  |
+                |                  p to pause / p to unpause         |
+                |                  q to quit                         |
+                +----------------------------------------------------+
+                """);
+
 
         while (!glfwWindowShouldClose(windowHandle) && KeepRunning) {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
+
+            // count frames at the start of rendering
+            countFrames++;
+
+            // if the frame delay is low aka rendering very fast
+            // we want to keep a smooth transition just like when frame delay is very high
+            if(FRAME_DELAY == 50) {
+                frameCountForColorChange = 180;
+            }
+            if (FRAME_DELAY < 50) {
+                frameCountForColorChange = 280;
+            }
+
+            if(countFrames >= frameCountForColorChange) {
+                // move to next color
+                currColor = (currColor + 1) % colors.length;
+                // reset frame counter
+                countFrames = 0;
+            }
+
 
             // wrapper to pause rendering
             if (!pauseScreen) {
@@ -141,12 +201,12 @@ public class GoLRenderer {
                 pPressed = true;
                 pauseScreen = !pauseScreen;
                 if(pauseScreen) {
-                    System.out.println("+++ Pause Screen");
+                    System.out.println("*** Pause Screen");
                     // uncomment to show NNNArray
                     //pp.showLiveArr();
                 }
                 else {
-                    System.out.println("+++ Unpause Screen");
+                    System.out.println("*** Unpause Screen");
                 }
 
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_P);
@@ -159,7 +219,7 @@ public class GoLRenderer {
             // for q | quit
             if (SlKeyStrokes.isKeyPressed(GLFW_KEY_Q) && !qPressed) {
                 qPressed = true;
-                System.out.println("+++ GoodBye!");
+                System.out.println(">>> GoodBye!");
                 KeepRunning = false;
 
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_Q);
@@ -180,7 +240,9 @@ public class GoLRenderer {
                 // set color for alive or dead squares
                 if (pp.get(i,j) == 1) {
                     // alive color
-                    glColor3f(0,1,0);
+                    // apply color from color array
+                    float[] storeColor = colors[currColor];
+                    glColor3f(storeColor[0], storeColor[1], storeColor[2]);
                 }
                 else {
                     // dead color ( change to match screen background )
