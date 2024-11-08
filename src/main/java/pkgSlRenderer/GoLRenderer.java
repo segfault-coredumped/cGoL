@@ -63,6 +63,8 @@ public class GoLRenderer {
     // track how many frames
     private int countFrames = 0;
 
+    private boolean resetting = false;
+
     public void render() {
         long windowHandle = SlWindowManager.get().getWindowHandle();
 
@@ -96,6 +98,11 @@ public class GoLRenderer {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT);
 
+            // wrapper for resetting
+            if (resetting) {
+                resetCGoL();
+                resetting = false;
+            }
             // count frames at the start of rendering
             countFrames++;
 
@@ -108,15 +115,14 @@ public class GoLRenderer {
                 frameCountForColorChange = 280;
             }
 
-            if(countFrames >= frameCountForColorChange) {
-                // move to next color
-                currColor = (currColor + 1) % colors.length;
-                // reset frame counter
-                countFrames = 0;
-            }
-
             // wrapper to pause rendering
             if (!pauseScreen) {
+                if (countFrames >= frameCountForColorChange) {
+                    // move to next color
+                    currColor = (currColor + 1) % colors.length;
+                    // reset frame counter
+                    countFrames = 0;
+                }
                 pp.liveOrDie();
 
             }
@@ -145,8 +151,8 @@ public class GoLRenderer {
         boolean qPressed = false;
 
         while(KeepRunning) {
-            // poll events needed here
-            glfwPollEvents();
+            // poll events should only be used once
+            //glfwPollEvents();
             // for I
             if (SlKeyStrokes.isKeyPressed(GLFW_KEY_I) && !iPressed) {
                 iPressed = true;
@@ -186,7 +192,7 @@ public class GoLRenderer {
                 rPressed = true;
                 KeepRunning = false;
                 System.out.println("+++ Reset Board");
-                pp.resetBoard(0,1);
+                resetCGoL();
                 KeepRunning = true;
 
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
@@ -227,6 +233,14 @@ public class GoLRenderer {
             }
         }
     }
+
+    // resetting the board has issues with frame delay so just restart the instance on reset
+    private void resetCGoL() {
+        pp = new SlPingPongManager(BOARDSIZE, BOARDSIZE);
+        //currColor = 0;
+        countFrames = 0;
+    }
+
 
     // edit the colors of the squares before the call to render them
     private void arrangeSquares(int rows, int cols, float squareWidth, float squareHeight) {
