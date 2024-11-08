@@ -42,10 +42,11 @@ public class GoLRenderer {
             {1.0f, 1.0f, 0.0f},
             {0.75f, 1.0f, 0.0f},
             {0.5f, 1.0f, 0.0f},
+
+            // middle of cycle - green
             {0.0f, 1.0f, 0.0f},
+
             // cycle back down
-            {0.0f, 1.0f, 0.5f},
-            {0.0f, 1.0f, 0.0f},
             {0.5f, 1.0f, 0.0f},
             {0.75f, 1.0f, 0.0f},
             {1.0f, 1.0f, 0.0f},
@@ -113,7 +114,6 @@ public class GoLRenderer {
                 // reset frame counter
                 countFrames = 0;
             }
-
 
             // wrapper to pause rendering
             if (!pauseScreen) {
