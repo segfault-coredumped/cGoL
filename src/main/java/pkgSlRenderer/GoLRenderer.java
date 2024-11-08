@@ -185,10 +185,8 @@ public class GoLRenderer {
             if(SlKeyStrokes.isKeyPressed(GLFW_KEY_R) && !rPressed) {
                 rPressed = true;
                 KeepRunning = false;
-                pauseScreen = true;
                 System.out.println("+++ Reset Board");
                 pp.resetBoard(0,1);
-                pauseScreen = false;
                 KeepRunning = true;
 
                 SlKeyStrokes.resetKeypressEvent(GLFW_KEY_R);
