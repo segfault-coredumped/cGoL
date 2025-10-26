@@ -121,4 +121,4 @@ The board is displayed in a window with alive cells in bright colors and dead ce
 ```
 
 ## License
-This project is released under the MIT License.
+This project is free to use for educational purposes.
